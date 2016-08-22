@@ -15,10 +15,49 @@
 # limitations under the License.
 #
 import webapp2
+from caesar import encrypt
 
+header_block = """
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>The One and The Only</title>
+    <style type='text/css'>
+     body {
+     background-color:#ccc;
+     }
+
+    </style>
+  </head>
+
+<body>
+ """
+footer_block = """
+</body>
+</html>
+
+ """
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        self.response.write('Hello world!')
+
+        getUserText = self.request.get('user_T')
+        getUserNumber = self.request.get('user_N')
+        intro = "<div id='intro'>Go ahead and encrypt a message. Don't worry, Noone will know what it means."
+        intro += "<img src='eyemoji.png' />"
+
+        intro +="</div>"
+        userInput = """
+             <form method='get' action='/'>
+             <label>State a number of arrangement</lable>
+             <input type='text' name='user_N' /></br>
+             <textarea type='password' name='user_T' value='"""+getUserText+"""' ></textarea>
+             <input type='submit' value='Excrypt It!' />
+             </form>
+        """
+
+        answer = encrypt(getUserText, getUserNumber)
+        page = header_block + intro + userInput +  answer + footer_block
+        self.response.write(page)
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler)
